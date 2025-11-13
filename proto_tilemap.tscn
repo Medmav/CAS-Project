@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://8qjsb2dunb4l"]
+
+[ext_resource type="PackedScene" uid="uid://dyevbjthrqqgw" path="res://Assets/Art/Tiled Files/ProtoTilemap.tmx" id="1_qbt7g"]
+
+[node name="ProtoTilemap" instance=ExtResource("1_qbt7g")]
+
+[node name="Terrain" parent="." index="0"]
+position = Vector2(0, -640)
