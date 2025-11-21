@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="CAS Project"
-run/main_scene="uid://ch4ts8dibic64"
+run/main_scene="uid://cxthuwg3ftf3x"
 config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="res://icon.svg"
 

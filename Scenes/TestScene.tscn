@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3 uid="uid://cxthuwg3ftf3x"]
+
+[ext_resource type="PackedScene" uid="uid://d3vt7te1ub1on" path="res://Scenes/Player.tscn" id="1_cguwc"]
+[ext_resource type="PackedScene" uid="uid://dyevbjthrqqgw" path="res://Assets/Art/Tiled Files/ProtoTilemap.tmx" id="2_wicfy"]
+
+[node name="Node2D" type="Node2D"]
+
+[node name="ProtoTilemap" parent="." instance=ExtResource("2_wicfy")]
+position = Vector2(0, -640)
+
+[node name="Player" parent="." instance=ExtResource("1_cguwc")]
+position = Vector2(48, -32)
+slideFriction = 0.0
+slideSpeed = 0
+walkFriction = 0.0
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(582, -345)
