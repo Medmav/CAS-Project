@@ -1,7 +1,8 @@
-[gd_scene load_steps=8 format=3 uid="uid://d3vt7te1ub1on"]
+[gd_scene load_steps=10 format=3 uid="uid://d3vt7te1ub1on"]
 
-[ext_resource type="Script" uid="uid://bhjimito0am8f" path="res://Scripts/PlayerController.gd" id="1_kyqiw"]
+[ext_resource type="Script" uid="uid://cb214mwx8r7e3" path="res://Scripts/player_controller.gd" id="1_gntrk"]
 [ext_resource type="Texture2D" uid="uid://da7y14h7dwidq" path="res://Assets/Art/ProtoCharacterSpriteSheet.png" id="1_xhfnw"]
+[ext_resource type="Script" uid="uid://b384grkstta5l" path="res://Scenes/player_animator.gd" id="3_dewec"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_kpjcp"]
 size = Vector2(8, 30)
@@ -55,22 +56,26 @@ tracks/0/keys = {
 "values": [Rect2(0, 32, 32, 32), Rect2(0, 32, 32, 32)]
 }
 
+[sub_resource type="Animation" id="Animation_5ixxa"]
+resource_name = "idle"
+step = 0.25
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_dewec"]
 _data = {
 &"RESET": SubResource("Animation_gntrk"),
+&"idle": SubResource("Animation_5ixxa"),
 &"slide": SubResource("Animation_dewec"),
 &"walk": SubResource("Animation_kyqiw")
 }
 
 [node name="Player" type="CharacterBody2D"]
-script = ExtResource("1_kyqiw")
+script = ExtResource("1_gntrk")
 jumpGravity = 400
 fallGravity = 900
 walkSpeed = 100
 jumpStrength = 300
 slideFriction = 10000.0
 slideSpeed = 200
-walkFriction = 10000.0
 
 [node name="Collision Box" type="CollisionShape2D" parent="."]
 position = Vector2(0, -15)
@@ -82,11 +87,14 @@ texture = ExtResource("1_xhfnw")
 region_enabled = true
 region_rect = Rect2(0, 0, 32, 32)
 
-[node name="PlayerAnimator" type="Node" parent="."]
+[node name="PlayerAnimator" type="Node" parent="." node_paths=PackedStringArray("player_controller", "animation_player", "sprite")]
+script = ExtResource("3_dewec")
+player_controller = NodePath("..")
+animation_player = NodePath("AnimationPlayer")
+sprite = NodePath("../Sprite2D")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="PlayerAnimator"]
 libraries = {
 &"": SubResource("AnimationLibrary_dewec")
 }
-autoplay = "walk"
 speed_scale = 1.5
