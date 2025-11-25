@@ -71,12 +71,6 @@ _data = {
 
 [node name="Player" type="CharacterBody2D"]
 script = ExtResource("1_gntrk")
-jumpGravity = 400
-fallGravity = 900
-walkSpeed = 100
-jumpStrength = 10
-slideFriction = 10000.0
-slideSpeed = 40000
 
 [node name="Collision Box" type="CollisionShape2D" parent="."]
 position = Vector2(0, -15)

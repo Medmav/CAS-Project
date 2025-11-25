@@ -2,11 +2,11 @@ extends CharacterBody2D
 class_name PlayerController
 
 #Change back to constant when find the right value 
-@export var jumpGravity := 0
-@export var fallGravity := 0
-@export var walkSpeed := 0 #speed at which the character moves by default when a&d are pressed
+@export var jumpGravity := 400
+@export var fallGravity := 900
+@export var walkSpeed := 100 #speed at which the character moves by default when a&d are pressed
 var amountOfJumps := 1
-@export var jumpLimit := -300
+@export var jumpLimit := -250
 var jumpCounter := 0
 var sliding := false
 var jumping := false
@@ -14,10 +14,10 @@ var falling := false
 var terminalVelocity := 1000
 var direction : float = 0.0
 var lastDirection : float = 0.0
-@export var jumpStrength := 0
-@export var slideFriction := 0.0
-@export var slideSpeed := 0
-@export var walkFriction := 10000.0
+@export var jumpStrength := 50
+@export var slideFriction := 300.0
+@export var slideSpeed := 250
+@export var walkFriction := 500.0
 
 #Player inputs and controls
 func _physics_process(delta : float) -> void:
@@ -45,7 +45,7 @@ func _physics_process(delta : float) -> void:
 #endregion
 #region Jump Control
 	if Input.is_action_pressed("Jump"):
-		if jumpCounter < amountOfJumps && velocity.y < jumpLimit:
+		if jumpCounter < amountOfJumps && velocity.y > jumpLimit:
 			velocity.y -= jumpStrength
 		if velocity.y <= jumpLimit:
 			jumpCounter += 1
@@ -55,7 +55,6 @@ func _physics_process(delta : float) -> void:
 		jumpCounter += 1
 #endregion
 #endregion
-	print(velocity.y)
 	move_and_slide()
 	# End of Physics Process Loop
 	
