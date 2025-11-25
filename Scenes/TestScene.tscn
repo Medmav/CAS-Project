@@ -10,9 +10,8 @@ position = Vector2(0, -640)
 
 [node name="Player" parent="." instance=ExtResource("1_cguwc")]
 position = Vector2(48, -32)
-slideFriction = 0.0
-slideSpeed = 0
-walkFriction = 0.0
-
-[node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2(582, -345)
+jumpLimit = -250
+jumpStrength = 50
+slideFriction = 200.0
+slideSpeed = 200
+walkFriction = 500.0
