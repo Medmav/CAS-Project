@@ -5,9 +5,9 @@ extends Node
 @export var sprite : Sprite2D
 
 func _process(delta: float) -> void:
-	if player_controller.direction == 1 && player_controller.velocity.x > 0:
+	if player_controller.direction == 1:
 		sprite.flip_h = false
-	elif player_controller.direction == -1 && player_controller.velocity.x < 0:
+	elif player_controller.direction == -1:
 		sprite.flip_h = true
 		
 	if player_controller.velocity.x:

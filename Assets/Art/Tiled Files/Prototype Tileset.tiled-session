@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "ProtoTilemap.tmx",
+    "activeFile": "ProtoTilemap.tsx",
     "expandedProjectPaths": [
     ],
     "file.lastUsedOpenFilter": "All Files (*)",
@@ -43,9 +43,9 @@
     ],
     "project": "Prototype Tileset.tiled-project",
     "recentFiles": [
-        "ProtoTilemap.tsx",
         "Rules/AutotileRules.tmx",
-        "ProtoTilemap.tmx"
+        "ProtoTilemap.tmx",
+        "ProtoTilemap.tsx"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.tileSize": {

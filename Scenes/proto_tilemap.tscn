@@ -6,3 +6,6 @@
 
 [node name="Terrain" parent="." index="0"]
 position = Vector2(0, -640)
+
+[node name="Prototype" parent="." index="1"]
+visible = false

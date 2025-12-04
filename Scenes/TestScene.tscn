@@ -10,8 +10,7 @@ position = Vector2(0, -640)
 
 [node name="Player" parent="." instance=ExtResource("1_cguwc")]
 position = Vector2(48, -32)
-jumpLimit = -250
-jumpStrength = 50
-slideFriction = 300.0
-slideSpeed = 250
-walkFriction = 500.0
+grappleRange = 400
+grappleStrength = 15
+fastfallGravity = 3000
+reticalRange = 20
