@@ -2,35 +2,36 @@ extends CharacterBody2D
 class_name PlayerController
 
 @export var grapple : RayCast2D
-@export var grapplePin : PinJoint2D # Pin joint in between rope and grappled object/surface
-@export var anchorCollision : CollisionShape2D # Collision Shape of the Static body that anchors the grapple
 var grappledObject
-@export var grappleRange : int
+@export var grappleRange : int = 400
 var grappleRadius : float
-@export var grappleStrength : int
+@export var grappleStrength : int = 15
 @export var grappleDirection : Vector2
 @export var grappleGravity : int
-@export var fastfallGravity : int
+@export var grappleCatch : int = 2 #the factor falling velocity.y is divided by when the grapple attaches
+var grapplePoint : Vector2
+@export var fastfallGravity : int = 3000
 var fastfall : bool
-@export var reticalRange : int
+@export var reticalRange : int = 20
 #Change back to constant when find the right value 
 @export var jumpGravity := 400
-@export var fallGravity := 900
+@export var fallGravity := 1200
 @export var walkSpeed := 100 #speed at which the character moves by default when a&d are pressed
 var amountOfJumps := 1
-var mousePosition : Vector2
-var mouseDirection : Vector2
-var collisionPoint : Vector2
-var globalGrapplePoint : Vector2
-@export var jumpLimit := -250
-var jumpCounter := 0
+@export var jumpLimit := -200
+var jumpCounter : int = 0
+var hasJumped : bool
 var sliding := false
 var jumping := false
 var falling := false
 var terminalVelocity := 1000
+var mousePosition : Vector2
+var mouseDirection : Vector2
+var collisionPoint : Vector2
+var globalGrapplePoint : Vector2
 var direction : float = 0.0
 var lastDirection : float = 0.0
-@export var jumpStrength := 50
+@export var jumpStrength := 3000
 @export var slideFriction := 300.0
 @export var slideSpeed := 250
 @export var walkFriction := 500.0
@@ -55,7 +56,7 @@ func _physics_process(delta : float) -> void:
 		sliding = false
 #endregion
 #region Slide Control
-	if Input.is_action_just_pressed("Slide"):
+	if Input.is_action_pressed("Slide"):
 		if is_on_floor() && abs(velocity.x) >= walkSpeed && not sliding:
 				velocity.x += lastDirection * slideSpeed
 				sliding = true
@@ -67,10 +68,11 @@ func _physics_process(delta : float) -> void:
 			velocity.y -= jumpStrength * delta
 		if velocity.y <= jumpLimit:
 			jumpCounter += 1
-			print("jumping")
+			hasJumped = true
 	if Input.is_action_just_released("Jump"):
-		if jumpCounter < amountOfJumps:
+		if jumpCounter < amountOfJumps && not hasJumped:
 			jumpCounter += 1
+		hasJumped = false
 #endregion
 #region Move Down Control
 	if Input.is_action_pressed("Move Down"):
@@ -80,57 +82,37 @@ func _physics_process(delta : float) -> void:
 #endregion
 #region Grapple Logic
 	if grapple != null:
-		if not grappled:
-			grapple.target_position = grappleRange * mouseDirection
-			collisionPoint = to_local(grapple.get_collision_point())
+		grappleCheck()
 		# Input for grappling
 		if Input.is_action_just_pressed("Grapple"):
-			if grapple.is_colliding():
-				globalGrapplePoint = to_global(collisionPoint)
-				grappledObject = grapple.get_collider()
-				if velocity.y > 0:
-					velocity.y /= 2
+			grappleAttach()
 		if Input.is_action_pressed("Grapple"):
-			if grapple.is_colliding() && grapplePin != null:
-				grapplePull()
-				#grapplePin.position = collisionPoint
-				#anchorCollision.position = collisionPoint
-				#anchorCollision.set_deferred("disabled", false)
-				grappled = true
+			grapplePull()
 		if Input.is_action_just_released("Grapple"):
-			anchorCollision.disabled = true
 			grappled = false
-	if grappled:
-		pass
 #endregion
 #endregion
+	print(grappled)
 	queue_redraw()
 	move_and_slide()
 	# End of Physics Process Loop
-	
-func _input(event):
-	# If the mouse goes off the screen it reports the last position
-	if event is InputEventMouseMotion:
-		mousePosition = event.position
 		
 #drawing the grapple
 func _draw():
 	if grapple.is_colliding():
 		draw_circle(collisionPoint, 5.0, Color.GREEN, true)
-		if grapplePin != null && grappled:
-			draw_circle(grapplePin.position, 5.0, Color.RED, true)
-			
-		if grappled:
-			draw_line(Vector2(0,0), collisionPoint, Color.GREEN, 3.0, true)
-			
+	if grappled:
+		draw_circle(collisionPoint, 5.0, Color.RED, true)
+	if grappled:
+		draw_line(Vector2(0,0), collisionPoint, Color.GREEN, 3.0, true)
 	draw_circle(reticalRange * mouseDirection, 5.0, Color.YELLOW, true)
+	draw_line(Vector2(0,0), velocity * 0.1, Color.RED, 3.0)
 #end of func _draw()
 #region getGravity() -> int
 func getGravity() -> int:
 	if grappled:
 		return grappleGravity
 	elif fastfall:
-		print("falling fast")
 		return fastfallGravity
 	elif velocity.y <= 0:
 		jumping = true
@@ -174,6 +156,25 @@ func setMouseDirection():
 	mouseDirection = mousePosition.normalized()
 #endregion
 func grapplePull():
-	collisionPoint = to_local(globalGrapplePoint)
-	grappleDirection = collisionPoint.normalized()
-	velocity += grappleStrength * grappleDirection
+	if grappled:
+		collisionPoint = to_local(globalGrapplePoint)
+		grappleDirection = collisionPoint.normalized()
+		velocity += grappleStrength * grappleDirection
+		print("pulling")
+	
+func grappleAttach():
+	if grapple.is_colliding():
+		collisionPoint = to_local(grapple.get_collision_point())
+		globalGrapplePoint = grapple.get_collision_point()
+		grappledObject = grapple.get_collider()
+		grappled = true
+		if velocity.y > 0 && globalGrapplePoint.y < global_position.y:
+			velocity.y /= grappleCatch
+			
+func grappleCheck(): #checks if the player can grapple
+	if not grappled:
+		grapple.target_position = grappleRange * mouseDirection
+		if grapple.is_colliding():
+			collisionPoint = to_local(grapple.get_collision_point())
+		else:
+			collisionPoint = Vector2(0,0)

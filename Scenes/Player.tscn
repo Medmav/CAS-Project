@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://d3vt7te1ub1on"]
+[gd_scene load_steps=11 format=3 uid="uid://d3vt7te1ub1on"]
 
 [ext_resource type="Script" uid="uid://cb214mwx8r7e3" path="res://Scripts/player_controller.gd" id="1_gntrk"]
 [ext_resource type="Texture2D" uid="uid://da7y14h7dwidq" path="res://Assets/Art/ProtoCharacterSpriteSheet.png" id="1_xhfnw"]
@@ -69,14 +69,9 @@ _data = {
 &"walk": SubResource("Animation_kyqiw")
 }
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_dewec"]
-radius = 0.01
-
-[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("grapple", "grapplePin", "anchorCollision")]
+[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("grapple")]
 script = ExtResource("1_gntrk")
 grapple = NodePath("GrappleShot")
-grapplePin = NodePath("GrapplePin")
-anchorCollision = NodePath("GrappleAnchor/AnchorCollision")
 fallGravity = 1200
 jumpLimit = -200
 jumpStrength = 3000
@@ -108,15 +103,3 @@ sprite = NodePath("../Sprite2D")
 player_controller = NodePath("..")
 
 [node name="GrappleShot" type="RayCast2D" parent="."]
-
-[node name="GrapplePin" type="PinJoint2D" parent="."]
-node_a = NodePath("../GrappleAnchor")
-node_b = NodePath("..")
-
-[node name="GrappleAnchor" type="StaticBody2D" parent="."]
-collision_layer = 2
-collision_mask = 2
-
-[node name="AnchorCollision" type="CollisionShape2D" parent="GrappleAnchor"]
-shape = SubResource("CircleShape2D_dewec")
-disabled = true
